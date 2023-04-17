@@ -3,8 +3,6 @@ import { googleLogout, useGoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
 import Login from './Login';
 import Dashboard from './Dashboard';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser } from '@fortawesome/free-solid-svg-icons';
 
 function App() {
   const [user, setUser] = useState([]);
@@ -44,7 +42,7 @@ function App() {
   return (
     <div>
       {loggedIn ? (
-        <Dashboard profile={profile} logout={logOut} />
+        <Dashboard profile={profile} logOut={logOut} />
       ) : (
         <Login login={login} />
       )}

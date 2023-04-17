@@ -1,53 +1,36 @@
 import React, { useState } from 'react';
 import './Dashboard.css';
-import jobTrackerBg from './assets/jobTrackrBg.png';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser } from '@fortawesome/free-solid-svg-icons';
+import DashboardHeader from './DashboardHeader';
+import MatchJD from './MatchJD';
+import TrackApplications from './TrackApplications';
 
-const Dashboard = ({ profile, logout }) => {
-  const [showDropdown, setShowDropdown] = useState(false);
+const Dashboard = ({ profile, logOut }) => {
+  const [activeTab, setActiveTab] = useState('matchJD');
 
-  const toggleDropdown = () => {
-    setShowDropdown(!showDropdown);
+  const handleTabClick = (tab) => {
+    setActiveTab(tab);
   };
-
-  const userImage = profile?.picture ? (
-    <img
-      src={profile.picture}
-      alt="user"
-      className="user-image"
-      onError={(e) => {
-        e.target.onerror = null;
-        e.target.src = '';
-        e.target.replaceWith(<FontAwesomeIcon icon={faUser} size="2x" />);
-      }}
-    />
-  ) : (
-    <FontAwesomeIcon icon={faUser} size="2x" />
-  );
 
   return (
     <div className="dashboard">
-      <header className="header">
-        <img src={jobTrackerBg} alt="JobTrackr logo" className="logo" />
-        <h1>JobTrackr</h1>
-        <div className="user-profile" onClick={toggleDropdown}>
-          {userImage}
-        </div>
-      </header>
-
-      {showDropdown && (
-        <div className="dropdown">
-          <div className="dropdown-content">
-            {userImage}
-            <p>Name: {profile.name}</p>
-            <p>Email: {profile.email}</p>
-            <button className="logout-btn" onClick={logout}>
-              Log out
-            </button>
-          </div>
-        </div>
-      )}
+      {profile && <DashboardHeader user={profile} logOut={logOut} />} {/* Render DashboardHeader only if user is defined */}
+      <div className="tabs">
+        <button
+          className={`tab ${activeTab === 'matchJD' ? 'active' : ''}`}
+          onClick={() => handleTabClick('matchJD')}
+        >
+          Match JD
+        </button>
+        <button
+          className={`tab ${activeTab === 'trackApplications' ? 'active' : ''}`}
+          onClick={() => handleTabClick('trackApplications')}
+        >
+          Track Applications
+        </button>
+      </div>
+      <div className="tab-content">
+        {activeTab === 'matchJD' ? <MatchJD /> : <TrackApplications />}
+      </div>
     </div>
   );
 };
