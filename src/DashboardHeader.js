@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import './DashboardHeader.css';
-import jobTrackerBg from './assets/jobTrackrBg.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 
@@ -33,7 +32,6 @@ const DashboardHeader = ({ user, logOut }) => {
       return (
         <div className="dashboard">
           <header className="header">
-            <img src={jobTrackerBg} alt="JobTrackr logo" className="logo" />
             <h1>JobTrackr</h1>
             <div className="user-profile" onClick={toggleDropdown}>
               {userImage}
