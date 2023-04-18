@@ -32,7 +32,7 @@ const DashboardHeader = ({ user, logOut }) => {
       return (
         <div className="dashboard">
           <header className="header">
-            <h1>JobTrackr</h1>
+            <h1 class="title">JobTrackr</h1>
             <div className="user-profile" onClick={toggleDropdown}>
               {userImage}
             </div>

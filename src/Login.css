@@ -1,19 +1,23 @@
-body {
+  .login-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Set the height to 100% of the viewport height */
+    width: 100vw; /* Set the width to 100% of the viewport width */
     background-image: url('./assets/jobTrackrBg.png');
+    background-color: rgba(255, 255, 255, 0.5) !important;
     background-size: cover;
     background-repeat: no-repeat;
-    background-color: rgba(255, 255, 255, 0.5) !important;
-  }  
+}
 
-  h1 {
+  .mainTitle {
     font-size: 4rem !important;
     font-weight: bold;
     text-align: center;
     margin-bottom: 40px;
     color: #000 !important;
     align-items: center;
-    margin-top: 20% !important;
-    padding-bottom: 5%;
   }
   
   .login-btn {
@@ -27,7 +31,6 @@ body {
     cursor: pointer;
     transition: background-color 0.3s ease;
     align-items: center !important;
-    margin-left: 40% !important;
   }
   
   .login-btn:hover {
