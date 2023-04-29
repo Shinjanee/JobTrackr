@@ -29,7 +29,7 @@ const Dashboard = ({ profile, logOut }) => {
         </button>
       </div>
       <div className="tab-content">
-        {activeTab === 'matchJD' ? <MatchJD /> : <TrackApplications />}
+        {activeTab === 'matchJD' ? <MatchJD /> : <TrackApplications profile={profile} />}
       </div>
     </div>
   );
