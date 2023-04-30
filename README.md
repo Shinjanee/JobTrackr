@@ -12,10 +12,8 @@ Welcome to JobTrackr, a job application management and resume optimization tool 
 - **Submission Limit**: Users are limited to 5 job application submissions within a 2-hour window, allowing for a more focused and efficient job search experience.
 
 ## Video Overview
-<video width="320" height="240" controls>
-  <source src="https://Shinjanee.github.io/JobTrackr/media/record.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+[![Watch the video overview](https://via.placeholder.com/320x180.png?text=Click+to+watch)](https://shinjanee.github.io/JobTrackr/media/record.mp4)
+
 
 
 
