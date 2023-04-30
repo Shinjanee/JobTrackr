@@ -2,7 +2,7 @@
 
 Welcome to JobTrackr, a job application management and resume optimization tool designed to elevate your job search experience. Powered by ChatGPT, JobTrackr offers a suite of features to streamline your job hunt and help you stand out from the crowd.
 
-### Highlighted Features
+## Highlighted Features
 
 - **Google Sign-in**: Quickly and securely sign in using your Google account.
 - **Resume Upload**: Easily add your resume and keep it organized in one place.
