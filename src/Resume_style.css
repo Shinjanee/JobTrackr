@@ -1,0 +1,26 @@
+.resume-textarea {
+  width: 100%;
+  height: 400px;
+  resize: none;
+  overflow-y: scroll;
+  margin-bottom: 10px;
+}
+
+.resume-submit-button {
+    padding: 10px 20px;
+    border-radius: 5px;
+    background-color: black;
+    font-size: 16px;
+    width: 100px;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    float: right;
+  }
+  
+
+.resume-submit-button:hover {
+  background-color: #5c6bc0;
+}

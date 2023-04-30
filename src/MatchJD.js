@@ -1,35 +1,54 @@
 import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
+import { RiLoader4Line } from 'react-icons/ri';
+import './MatchJD_style.css';
 
-const MatchJD = () => {
+const API_URL = 'http://127.0.0.1:5000';
+
+const MatchJD = ({ profile, hasResume }) => {
   const [inputText, setInputText] = useState('');
   const [outputText, setOutputText] = useState('');
-  const [tries, setTries] = useState(parseInt(localStorage.getItem('tries')) || 5);
+  const [tries, setTries] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isDisabled, setIsDisabled] = useState(true);
   const buttonRef = useRef();
 
-  useEffect(() => {
-    setInputText('');
-    updateButtonStatus();
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem('tries', tries);
-    updateButtonStatus();
-  }, [tries]);
-
-  useEffect(() => {
-    updateButtonStatus();
-  }, [inputText]);
-
-  const updateButtonStatus = () => {
+  const updateButtonDisabledStatus = () => {
     if (inputText === '' || inputText.length < 50 || tries <= 0) {
-      buttonRef.current.disabled = true;
-      buttonRef.current.style.backgroundColor = '#ddd';
-      buttonRef.current.style.color = '#999';
+      setIsDisabled(true);
     } else {
-      buttonRef.current.disabled = false;
-      buttonRef.current.style.backgroundColor = '#3f51b5';
-      buttonRef.current.style.color = '#fff';
+      setIsDisabled(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchUpdatedTries();
+  }, []);
+  
+
+  useEffect(() => {
+    if (tries !== null) {
+      updateButtonDisabledStatus();
+    }
+  }, [tries, inputText]);
+
+  const fetchUpdatedTries = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/users/tries/reset/${profile.id}`);
+      setTries(response.data.tries);
+    } catch (error) {
+      console.error("Error fetching updated tries:", error);
+    }
+  };  
+
+  const updateTries = async (newTries) => {
+    try {
+      console.log("Sending update request with tries:", newTries); 
+      await axios.put(`${API_URL}/users/tries/${profile.id}`, {
+        tries: newTries
+      });
+    } catch (error) {
+      console.error("Error updating tries:", error);
     }
   };
 
@@ -38,46 +57,91 @@ const MatchJD = () => {
   };
 
   const handleRightArrowClick = async () => {
-    if (tries > 0) {
-      const response = await axios.post('https://api.openai.com/v1/engines/davinci-codex/completions', {
-        prompt: inputText,
-        max_tokens: 1024,
-        n: 1,
-        stop: ['\n']
-      }, {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer YOUR_API_KEY'
-        }
-      });
-      setOutputText(response.data.choices[0].text);
-      setTries(prevTries => prevTries - 1);
+    if (tries <= 0) {
+      return;
     }
-  };
   
-  return (
-    <div key={tries}>
-      <h2>Match JD</h2>
-      <div style={{ display: 'flex', alignItems: 'stretch' }}>
-        <textarea
-          style={{ flex: 1, height: '400px', resize: 'none', overflowY: 'scroll' }}
-          value={inputText}
-          onChange={handleInputTextChange}
-        />
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 10px' }}>
-          <button onClick={handleRightArrowClick} style={{ fontSize: '32px', padding: '10px 20px', borderRadius: '10px', boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)', backgroundColor: '#3f51b5', color: 'white', border: 'none', cursor: 'pointer' }} ref={buttonRef} disabled={!inputText || inputText.length < 50 || tries === 0}>
-            &rarr;
-          </button>
-        </div>
-        <textarea
-          style={{ flex: 1, height: '400px', resize: 'none', overflowY: 'scroll' }}
-          value={outputText}
-          readOnly
-        />
+    try {
+      setOutputText("")
+      setIsLoading(true);
+      const response = await axios.post(`${API_URL}/users/openai/${profile.id}`, {
+        inputText: inputText
+      });
+  
+      // Handle the response data here
+      console.log(response.data);
+      setOutputText(response.data.reply);
+      const newTries = tries - 1;
+      console.log("New tries count:", newTries);
+      setTries(newTries);
+      updateTries(newTries);
+      updateButtonDisabledStatus();
+  
+    } catch (error) {
+      console.error('Error calling Flask API:', error);
+    }
+    finally {
+      setIsLoading(false);
+    }
+  };  
+  
+    return (
+      <div>
+        {hasResume ? (
+          <>
+            {tries === null ? (
+              <div>Loading...</div>
+            ) : (
+              <>
+                <h2>Match JD</h2>
+                <div style={{ display: 'flex', alignItems: 'stretch' }}>
+                  <textarea
+                    style={{ flex: 1, height: '400px', resize: 'none', overflowY: 'scroll' }}
+                    value={inputText}
+                    onChange={handleInputTextChange}
+                  />
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 10px' }}>
+                    {isLoading ? (
+                      <div className="loading-indicator">
+                        <RiLoader4Line className="spinner" />
+                      </div>
+                    ) : (
+                      <button
+                      onClick={handleRightArrowClick}
+                      style={{
+                        fontSize: '32px',
+                        padding: '10px 20px',
+                        borderRadius: '10px',
+                        boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)',
+                        backgroundColor: isDisabled ? '#ddd' : '#3f51b5',
+                        color: isDisabled ? '#999' : '#fff',
+                        border: 'none',
+                        cursor: 'pointer'
+                      }}
+                      disabled={isDisabled}
+                    >
+                      &rarr;
+                    </button>              
+                    )}
+                  </div>
+                  <textarea
+                    style={{ flex: 1, height: '400px', resize: 'none', overflowY: 'scroll' }}
+                    value={outputText}
+                    readOnly
+                  />
+                </div>
+                {inputText.length < 50 && tries > 0 && <p style={{ color: 'red' }}>Add at least 50 words.</p>}
+                {tries <= 0 && <p style={{ color: "red" }}>No more tries remaining. Try after 2 hours.</p>}
+                <p>Attempts remaining: {tries}</p>
+              </>
+            )}
+          </>
+        ) : (
+          <p>Please add your resume to use this functionality.</p>
+        )}
       </div>
-      <p>Attempts remaining: {tries}</p>
-    </div>
-  );
+    );
 }
 
 export default MatchJD;
+

@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Button, TextField, Select, MenuItem, IconButton, List, ListItem, ListItemText, ListItemSecondaryAction, Typography } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Modal, Button, TextField, Select, MenuItem, IconButton, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CloseIcon from '@mui/icons-material/Close';
+import { DataGrid } from '@mui/x-data-grid';
 
 const API_URL = 'http://127.0.0.1:5000';
 
@@ -11,6 +12,8 @@ const TrackApplications = ({ profile }) => {
   const [applications, setApplications] = useState([]);
   const [formVisible, setFormVisible] = useState(false);
   const [editingApplicationId, setEditingApplicationId] = useState(null);
+  const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
+  const [selectedApplicationId, setSelectedApplicationId] = useState(null);
   const [formData, setFormData] = useState({
     companyName: '',
     jobLink: '',
@@ -22,7 +25,7 @@ const TrackApplications = ({ profile }) => {
     fetch(`${API_URL}/applications/${profile.id}`)
       .then((response) => response.json())
       .then((data) => setApplications(data));
-  }, []);
+  }, [profile.id]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -42,7 +45,7 @@ const TrackApplications = ({ profile }) => {
         companyName: '',
         jobLink: '',
         position: '',
-        status: 'applied',
+        status: 'Applied',
       });
       setFormVisible(false);
       fetch(`${API_URL}/applications/${profile.id}`)
@@ -54,10 +57,18 @@ const TrackApplications = ({ profile }) => {
     });
   };
 
-  const handleDelete = (_id) => {
-    fetch(`${API_URL}/applications/${_id}`, {
+  const handleDelete = (e, _id) => {
+    e.stopPropagation();
+    setSelectedApplicationId(_id);
+    setDeleteConfirmationOpen(true);
+  };
+
+  const handleDeleteConfirmed = () => {
+    fetch(`${API_URL}/applications/${selectedApplicationId}`, {
       method: 'DELETE',
     }).then(() => {
+      setDeleteConfirmationOpen(false);
+      setSelectedApplicationId(null);
       fetch(`${API_URL}/applications/${profile.id}`)
         .then((response) => response.json())
         .then((data) => setApplications(data));
@@ -119,6 +130,57 @@ const TrackApplications = ({ profile }) => {
       .catch((error) => console.error("Error updating application:", error));
   };
 
+  const columns = [
+    { field: 'companyName', headerName: 'Company Name', width: 250 },
+    { field: 'position', headerName: 'Position', width: 250 },
+    {
+      field: 'jobLink',
+      headerName: 'Job Link',
+      width: 500,
+      renderCell: (params) => (
+        <a
+          href={params.value}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {params.value}
+        </a>
+      ),
+    },
+    { 
+      field: 'status',
+      headerName: 'Status',
+      width: 150,
+      renderCell: (params) => (
+        <div style={{ textAlign: 'right',
+                  fontWeight: 'bold',
+                  color: 'white',
+                  borderRadius: '4px',
+                  display: 'inline-block',
+                  backgroundColor: getStatusColor(params.value),
+                  padding: '4px 8px', }}>
+          {params.value}
+        </div>
+      ),
+    },
+    {
+    field: 'actions',
+    headerName: 'Actions',
+    width: 100,
+    sortable: false,
+    renderCell: (params) => (
+    <IconButton
+    color="primary"
+    aria-label="delete"
+    onClick={(e) => handleDelete(e, params.row._id)}
+    >
+    <DeleteIcon />
+    </IconButton>
+    ),
+    },
+    ];
+
   return (
     <Box>
       <Typography variant="h4" gutterBottom>
@@ -175,40 +237,53 @@ const TrackApplications = ({ profile }) => {
           </form>
         </Box>
       </Modal>
-      <List>
-        {applications.map((application) => (
-          <ListItem
-            key={application._id}
-            sx={{ my: 1, borderBottom: "1px solid #ccc", cursor: "pointer" }}
-            onClick={() => handleRowClick(application)}
-          >            
-        <ListItemText
-              primary={`${application.companyName}`}
-              secondary={`${application.position}`}
-            />
-            <ListItemSecondaryAction>
-              <Typography
-                variant="body2"
-                sx={{
-                  textAlign: 'right',
-                  fontWeight: 'bold',
-                  color: 'white',
-                  borderRadius: '4px',
-                  display: 'inline-block',
-                  backgroundColor: getStatusColor(application.status),
-                  padding: '4px 8px',
-                }}
-              >
-                {application.status}
-              </Typography>
-              <IconButton edge="end" aria-label="delete" onClick={() => handleDelete(application._id)}>
-                <DeleteIcon />
-              </IconButton>
-            </ListItemSecondaryAction>
-          </ListItem>
-        ))}
-      </List>
-    </Box>
+      <div style={{ height: 400, width: '100%' }}>
+        <DataGrid
+          rows={applications}
+          columns={columns}
+          getRowId={(row) => row._id}
+          onRowClick={(params) => handleRowClick(params.row)}
+          disableSelectionOnClick
+        />
+        </div>
+        <Dialog
+          open={deleteConfirmationOpen}
+          onClose={() => setDeleteConfirmationOpen(false)}
+        >
+          <DialogTitle>Delete Application</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Are you sure you want to delete this application?
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              onClick={() => setDeleteConfirmationOpen(false)}
+              sx={{
+                bgcolor: 'black',
+                color: 'white',
+                ':hover': {
+                  backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                },
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleDeleteConfirmed}
+              sx={{
+                bgcolor: 'lightgray',
+                color: 'red',
+                ':hover': {
+                  backgroundColor: 'rgba(128, 128, 128, 0.7)',
+                },
+              }}
+            >
+              Yes
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </Box>
   );
 };
 
