@@ -1,4 +1,4 @@
-## JobTrackr: Elevate Your Job Application Game
+# JobTrackr: Elevate Your Job Application Game
 
 Welcome to JobTrackr, a job application management and resume optimization tool designed to elevate your job search experience. Powered by ChatGPT, JobTrackr offers a suite of features to streamline your job hunt and help you stand out from the crowd.
 
@@ -11,7 +11,7 @@ Welcome to JobTrackr, a job application management and resume optimization tool 
 - **Flexible Data Grid**: Effortlessly sort and filter your list of applications for an efficient job search experience.
 - **Submission Limit**: Users are limited to 5 job application submissions within a 2-hour window, allowing for a more focused and efficient job search experience.
 
-##Video Overview
+## Video Overview
 <video width="320" height="240" controls>
   <source src="media/record.mp4" type="video/mp4">
   Your browser does not support the video tag.
