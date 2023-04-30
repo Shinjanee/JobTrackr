@@ -13,9 +13,10 @@ Welcome to JobTrackr, a job application management and resume optimization tool 
 
 ## Video Overview
 <video width="320" height="240" controls>
-  <source src="https://drive.google.com/uc?export=download&id=1WisfTIkiSUN_zdY1Jj8061D0b-QBku4m" type="video/mp4">
+  <source src="https://Shinjanee.github.io/JobTrackr/media/record.mp4" type="video/mp4">
   Your browser does not support the video tag.
 </video>
+
 
 
 
