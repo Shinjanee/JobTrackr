@@ -33,7 +33,6 @@ const TrackApplications = ({ profile }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Submitting form data:', formData);
     fetch(`${API_URL}/applications`, {
       method: 'POST',
       headers: {
@@ -51,7 +50,6 @@ const TrackApplications = ({ profile }) => {
       fetch(`${API_URL}/applications/${profile.id}`)
         .then((response) => response.json())
         .then((data) => {
-          console.log('Updated applications data:', data);
           setApplications(data);
         });
     });
@@ -102,7 +100,6 @@ const TrackApplications = ({ profile }) => {
 
   const handleUpdate = (e) => {
     e.preventDefault();
-    console.log("Updating application:", formData);
     fetch(`${API_URL}/applications/${editingApplicationId}`, {
       method: "PUT",
       headers: {
@@ -123,7 +120,6 @@ const TrackApplications = ({ profile }) => {
         fetch(`${API_URL}/applications/${profile.id}`)
           .then((response) => response.json())
           .then((data) => {
-            console.log("Updated applications data:", data);
             setApplications(data);
           });
       })
