@@ -6,9 +6,9 @@ import MatchJD from './MatchJD';
 import Resume from './Resume';
 import TrackApplications from './TrackApplications';
 
-const API_URL = 'http://127.0.0.1:5000';
+const API_URL = process.env.REACT_APP_API_URL;
 
-const Dashboard = ({ profile, logOut }) => {
+const Dashboard = ({ profile, logOut, refreshAccessToken }) => {
   const [activeTab, setActiveTab] = useState('resume');
   const [hasResume, setHasResume] = useState(false);
 
@@ -56,7 +56,8 @@ const Dashboard = ({ profile, logOut }) => {
         </button>
       </div>
       <div className="tab-content">
-        {activeTab === 'matchJD' ? <MatchJD profile={profile} hasResume={hasResume}/> : activeTab === 'resume' ? <Resume profile={profile} setHasResume={setHasResume}/> : <TrackApplications profile={profile} />}
+        {activeTab === 'matchJD' ? <MatchJD profile={profile} hasResume={hasResume}/> : activeTab === 'resume' ? <Resume profile={profile} setHasResume={setHasResume}/> : <TrackApplications profile={profile} refreshAccessToken={refreshAccessToken}
+/>}
       </div>
     </div>
   );
