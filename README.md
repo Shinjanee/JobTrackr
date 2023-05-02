@@ -25,7 +25,11 @@ Welcome to JobTrackr, a job application management and resume optimization tool 
 
 ## Video Overview
 
-https://user-images.githubusercontent.com/29971179/235374627-25dd5b08-09a7-4c1f-bcd8-4e4462d28c64.mp4
+
+https://user-images.githubusercontent.com/29971179/235569832-2d6a8c49-903e-481d-a888-58ddf04f7991.mp4
+
+
+
 
 
 
